@@ -105,7 +105,7 @@ type Service struct {
 	Mutex sync.Mutex
 }
 
-// NewService creates a dcrwebapi service
+// NewService creates a hxwebapi service
 func NewService() *Service {
 	service := &Service{}
 	service.HTTPClient = &http.Client{
@@ -119,81 +119,10 @@ func NewService() *Service {
 	service.Cache = sync.Map{}
 	service.Mutex = sync.Mutex{}
 	service.Stakepools = &StakepoolSet{
-		"Bravo": {
-			APIVersionsSupported: []interface{}{},
-			Network:              "mainnet",
-			URL:                  "https://dcr.stakepool.net",
-		},
-		"Delta": {
-			APIVersionsSupported: []interface{}{},
-			Network:              "mainnet",
-			URL:                  "https://dcr.stakeminer.com",
-		},
-		"Echo": {
-			APIVersionsSupported: []interface{}{},
-			Network:              "mainnet",
-			URL:                  "https://pool.d3c.red",
-		},
-		// Stakepool APi is unreachable for Foxtrot
-		// "Foxtrot" = Stakepool{
-		//   APIVersionsSupported: []interface{}{},
-		//   Network:              "mainnet",
-		//   URL:                  "https://dcrstakes.com",
-		// }
-		"Golf": {
-			APIVersionsSupported: []interface{}{},
-			Network:              "mainnet",
-			URL:                  "https://stakepool.dcrstats.com",
-		},
-		"Hotel": {
-			APIVersionsSupported: []interface{}{},
-			Network:              "mainnet",
-			URL:                  "https://stake.decredbrasil.com",
-		},
-		"India": {
-			APIVersionsSupported: []interface{}{},
-			Network:              "mainnet",
-			URL:                  "https://stakepool.eu",
-		},
-		"Juliett": {
-			APIVersionsSupported: []interface{}{},
-			Network:              "mainnet",
-			URL:                  "https://dcr.ubiqsmart.com",
-		},
-		"Kilo": {
+		"TEST": {
 			APIVersionsSupported: []interface{}{},
 			Network:              "testnet",
-			URL:                  "https://teststakepool.decred.org",
-		},
-		"Lima": {
-			APIVersionsSupported: []interface{}{},
-			Network:              "mainnet",
-			URL:                  "https://ultrapool.eu",
-		},
-		"Mike": {
-			APIVersionsSupported: []interface{}{},
-			Network:              "mainnet",
-			URL:                  "https://dcr.farm",
-		},
-		"November": {
-			APIVersionsSupported: []interface{}{},
-			Network:              "mainnet",
-			URL:                  "https://decred.raqamiya.net",
-		},
-		"Oscar": {
-			APIVersionsSupported: []interface{}{},
-			Network:              "mainnet",
-			URL:                  "https://pos.dcr.fans",
-		},
-		"Papa": {
-			APIVersionsSupported: []interface{}{},
-			Network:              "mainnet",
-			URL:                  "https://stakey.net",
-		},
-		"Ray": {
-			APIVersionsSupported: []interface{}{},
-			Network:              "mainnet",
-			URL:                  "https://dcrpos.idcray.com",
+			URL:                  "http://stakepool1.hybrid.network",
 		},
 	}
 
@@ -233,7 +162,7 @@ func filterDownloadCount(count *int64, dataset *[]interface{}) {
 	}
 }
 
-// downloadCount calculates the cummulative download count for DCR binaries and releases
+// downloadCount calculates the cummulative download count for Hx binaries and releases
 func downloadCount(service *Service) (*[]string, error) {
 	now := time.Now()
 	entry, hasDc := service.Cache.Load("dc")
@@ -248,12 +177,12 @@ func downloadCount(service *Service) (*[]string, error) {
 
 	var count int64
 	// fetch all binaries
-	binReq, err := http.NewRequest("GET", "https://api.github.com/repos/decred/decred-binaries/releases", nil)
+	binReq, err := http.NewRequest("GET", "https://", nil)
 	if err != nil {
 		return nil, err
 	}
 
-	binReq.Header.Set("User-Agent", "decred/dcrweb bot")
+	binReq.Header.Set("User-Agent", "hybridnetwork/hxweb bot")
 	binResp, err := service.HTTPClient.Do(binReq)
 	if err != nil {
 		return nil, err
@@ -278,12 +207,12 @@ func downloadCount(service *Service) (*[]string, error) {
 	filterDownloadCount(&count, binaries)
 
 	// fetch all releases
-	relReq, err := http.NewRequest("GET", "https://api.github.com/repos/decred/decred-release/releases", nil)
+	relReq, err := http.NewRequest("GET", "https://", nil)
 	if err != nil {
 		return nil, err
 	}
 
-	relReq.Header.Set("User-Agent", "decred/dcrweb bot")
+	relReq.Header.Set("User-Agent", "hybridnetwork/hxweb bot")
 	relResp, err := service.HTTPClient.Do(relReq)
 	if err != nil {
 		return nil, err
@@ -376,13 +305,12 @@ func insightStatus(service *Service) (*map[string]interface{}, error) {
 		}
 	}
 
-	statusReq, err := http.NewRequest("GET",
-		"https://mainnet.decred.org/api/status", nil)
+	statusReq, err := http.NewRequest("GET", "http://explorer1.hybrid.network/api/status", nil)
 	if err != nil {
 		return nil, err
 	}
 
-	statusReq.Header.Set("User-Agent", "decred/dcrweb bot")
+	statusReq.Header.Set("User-Agent", "hybridnetwork/hxweb bot")
 	statusResp, err := service.HTTPClient.Do(statusReq)
 	if err != nil {
 		return nil, err
@@ -413,7 +341,7 @@ func insightStatus(service *Service) (*map[string]interface{}, error) {
 	return status, nil
 }
 
-// coinSupply returns the DCR coin supply on mainnet
+// coinSupply returns the Hx coin supply on mainnet
 func coinSupply(service *Service) (*map[string]interface{}, error) {
 	now := time.Now()
 	entry, hasGSC := service.Cache.Load("gsc")
@@ -426,12 +354,12 @@ func coinSupply(service *Service) (*map[string]interface{}, error) {
 		}
 	}
 
-	supplyReq, err := http.NewRequest("GET", "https://mainnet.decred.org/api/status?q=getCoinSupply", nil)
+	supplyReq, err := http.NewRequest("GET", "http://stakepool1.hybrid.network/api/status?q=getCoinSupply", nil)
 	if err != nil {
 		return nil, err
 	}
 
-	supplyReq.Header.Set("User-Agent", "decred/dcrweb bot")
+	supplyReq.Header.Set("User-Agent", "hybridnetwork/hxweb bot")
 	supplyResp, err := service.HTTPClient.Do(supplyReq)
 	if err != nil {
 		return nil, err
@@ -490,7 +418,7 @@ func stakepoolStats(service *Service, key string, apiVersion int) error {
 		return err
 	}
 
-	poolReq.Header.Set("User-Agent", "decred/dcrweb bot")
+	poolReq.Header.Set("User-Agent", "hybridnetwork/hxweb bot")
 	poolResp, err := service.HTTPClient.Do(poolReq)
 	if err != nil {
 		return err
@@ -549,7 +477,7 @@ func stakepoolStats(service *Service, key string, apiVersion int) error {
 	return errors.New("expected success status")
 }
 
-// stakepoolData fetches statistics for all listed DCR stakepools
+// stakepoolData fetches statistics for all listed Hx stakepools
 func stakepoolData(service *Service) {
 	waitGroup := sync.WaitGroup{}
 	waitGroup.Add(len(*service.Stakepools))
@@ -572,7 +500,7 @@ func stakepoolData(service *Service) {
 }
 
 // GetCoinSupply is the handler func for the `/gsc` route.
-// It returns statistics on the DCR blockchain and the available coin supply
+// It returns statistics on the Hx blockchain and the available coin supply
 func (service *Service) GetCoinSupply(writer http.ResponseWriter, request *http.Request) {
 	resp, err := coinSupply(service)
 	if err != nil {

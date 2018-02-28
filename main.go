@@ -13,6 +13,6 @@ const (
 
 func main() {
 	service := NewService()
-	log.Println("dcrwebapi started on", port)
+	log.Println("hxwebapi started on", port)
 	log.Fatal(http.ListenAndServe(port, service.Router))
 }

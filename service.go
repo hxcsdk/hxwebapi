@@ -122,7 +122,7 @@ func NewService() *Service {
 		"TEST": {
 			APIVersionsSupported: []interface{}{},
 			Network:              "testnet",
-			URL:                  "http://stakepool1.hybrid.network",
+			URL:                  "http://stakepool1.testnet.hybrid.network",
 		},
 	}
 
@@ -305,7 +305,7 @@ func insightStatus(service *Service) (*map[string]interface{}, error) {
 		}
 	}
 
-	statusReq, err := http.NewRequest("GET", "http://explorer1.hybrid.network/api/status", nil)
+	statusReq, err := http.NewRequest("GET", "http://explorer1.testnet.hybrid.network/api/status", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -354,7 +354,7 @@ func coinSupply(service *Service) (*map[string]interface{}, error) {
 		}
 	}
 
-	supplyReq, err := http.NewRequest("GET", "http://stakepool1.hybrid.network/api/status?q=getCoinSupply", nil)
+	supplyReq, err := http.NewRequest("GET", "http://stakepool1.testnet.hybrid.network/api/status?q=getCoinSupply", nil)
 	if err != nil {
 		return nil, err
 	}
